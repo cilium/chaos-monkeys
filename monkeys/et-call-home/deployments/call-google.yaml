@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: chaos-et-calls-google
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        name: chaos-et-calls-google
+    spec:
+      containers:
+      - name: daltons
+        image: docker.io/cilium/chaos-test-base:latest
+        imagePullPolicy: Always
+        command: [ "/test/run.sh" ]
+        env:
+          - name: "URL"
+            value: "www.google.com"
+          - name: "SLEEP"
+            value: "1"
+          - name: "CURL_OPTIONS"
+            value: "--connect-timeout 10 -S"
+          - name: "SLACK_HOOK"
+            valueFrom:
+              configMapKeyRef:
+                name: monkey-config
+                key: slack-hook
+        volumeMounts:
+        - name: cilium-run
+          mountPath: /var/run/cilium
+        - name: run-script
+          mountPath: /test
+      volumes:
+      - name: cilium-run
+        hostPath:
+          path: /var/run/cilium
+      - name: run-script
+        configMap:
+          name: chaos-test-et-call-home-script
+          defaultMode: 0777

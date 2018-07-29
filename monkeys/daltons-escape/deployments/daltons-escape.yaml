@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: chaos-daltons-egress-world
+spec:
+  replicas: 10
+  template:
+    metadata:
+      labels:
+        name: chaos-daltons-egress-world
+    spec:
+      containers:
+      - name: daltons
+        image: docker.io/cilium/chaos-test-base:1.0
+        command: [ "/test/run.sh" ]
+        env:
+          - name: "URL"
+            value: "www.google.com"
+          - name: "SLEEP"
+            value: "1"
+          - name: "SLACK_HOOK"
+            valueFrom:
+              configMapKeyRef:
+                name: monkey-config
+                key: slack-hook
+        volumeMounts:
+        - name: run-script
+          mountPath: /test
+      volumes:
+      - name: run-script
+        configMap:
+          name: chaos-test-dalton-script
+          defaultMode: 0777
