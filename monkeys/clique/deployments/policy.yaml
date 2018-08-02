@@ -1,0 +1,12 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "chaos-test-clique-allow"
+spec:
+  endpointSelector:
+    matchLabels:
+      name: chaos-clique
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        name: chaos-clique
