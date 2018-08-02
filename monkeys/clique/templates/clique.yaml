@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chaos-clique-first
+spec:
+  ports:
+  - port: 80
+  selector:
+    statefulset.kubernetes.io/pod-name: chaos-clique-0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chaos-clique-second
+spec:
+  ports:
+  - port: 80
+  selector:
+    statefulset.kubernetes.io/pod-name: chaos-clique-1
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: chaos-clique
+spec:
+  serviceName: chaos-clique
+  selector:
+    matchLabels:
+      name: chaos-clique
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: chaos-clique
+    spec:
+      containers:
+      - name: clique
+        image: docker.io/cilium/chaos-test-base:1.0
+        imagePullPolicy: Always
+        command: [ "/test/run.sh" ]
+        env:
+          - name: "POD_NAME"
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: "SLACK_HOOK"
+            valueFrom:
+              configMapKeyRef:
+                name: monkey-config
+                key: slack-hook
+        {{- range $key, $value := .Values.env }}
+          - name: {{ $key | upper | replace "." "_" }}
+            value: {{ $value | quote }}
+        {{- end }}
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: run-script
+          mountPath: /test
+        - name: bpf-maps
+          mountPath: /sys/fs/bpf
+        - name: cilium-run
+          mountPath: /var/run/cilium
+        securityContext:
+          capabilities:
+            add:
+              - "NET_ADMIN"
+          privileged: true
+      volumes:
+      - name: run-script
+        configMap:
+          name: chaos-test-{{ .Values.basename }}-script
+          defaultMode: 0777
+      - name: bpf-maps
+        hostPath:
+          path: /sys/fs/bpf
+      - name: cilium-run
+        hostPath:
+          path: /var/run/cilium
