@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chaos-clique-first
+spec:
+  ports:
+  - port: 80
+  selector:
+    statefulset.kubernetes.io/pod-name: chaos-clique-0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chaos-clique-second
+spec:
+  ports:
+  - port: 80
+  selector:
+    statefulset.kubernetes.io/pod-name: chaos-clique-1
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: chaos-clique
+spec:
+  serviceName: chaos-clique
+  selector:
+    matchLabels:
+      name: chaos-clique
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: chaos-clique
+    spec:
+      containers:
+      - name: clique
+        image: docker.io/cilium/chaos-test-base:latest
+        imagePullPolicy: Never
+        command: [ "/test/run.sh" ]
+        env:
+          - name: "POD_NAME"
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: "SLEEP"
+            value: "1"
+          - name: "CURL_OPTIONS"
+            value: "--connect-timeout 10 -S -s"
+          - name: "SLACK_HOOK"
+            valueFrom:
+              configMapKeyRef:
+                name: monkey-config
+                key: slack-hook
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: cilium-run
+          mountPath: /var/run/cilium
+        - name: run-script
+          mountPath: /test
+      volumes:
+      - name: cilium-run
+        hostPath:
+          path: /var/run/cilium
+      - name: run-script
+        configMap:
+          name: chaos-test-clique-script
+          defaultMode: 0777
