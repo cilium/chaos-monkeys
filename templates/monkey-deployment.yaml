@@ -12,6 +12,7 @@ spec:
       containers:
       - name: {{ .Values.basename }}
         image: docker.io/cilium/chaos-test-base:1.0
+        imagePullPolicy: Always
         command: [ "/test/run.sh" ]
         env:
           - name: "SLACK_HOOK"
@@ -28,6 +29,8 @@ spec:
           mountPath: /test
         - name: bpf-maps
           mountPath: /sys/fs/bpf
+        - name: cilium-run
+          mountPath: /var/run/cilium
         securityContext:
           capabilities:
             add:
@@ -41,3 +44,6 @@ spec:
       - name: bpf-maps
         hostPath:
           path: /sys/fs/bpf
+      - name: cilium-run
+        hostPath:
+          path: /var/run/cilium
