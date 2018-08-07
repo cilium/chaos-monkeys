@@ -29,5 +29,5 @@ spec:
       volumes:
       - name: run-script
         configMap:
-          name: chaos-test-dalton-script
+          name: chaos-test-daltons-escape-script
           defaultMode: 0777
