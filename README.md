@@ -21,6 +21,6 @@ failures:
 	vim monkey-config.yaml
 	kubectl -n chaos-testing apply -f monkey-config.yaml
 
-Deploy the test monkeys :
+Deploy the test monkeys:
 
-	kubectl -n chaos-testing apply -f monkeys/*/deployments/
+	make deploy
