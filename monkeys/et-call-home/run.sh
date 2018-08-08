@@ -31,7 +31,7 @@ do
 
 	[ "$CODE" -ne "0" ] && {
 		notify_slack ":fire: *E.T. ($HOSTNAME) cannot call home!* (exit code $CODE) :face_palm:"
-		test_failed
+		test_fail
 		exit 1
 	}
 
