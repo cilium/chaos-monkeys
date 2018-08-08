@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.name }}
+    spec:
+      containers:
+      - name: {{ .Values.basename }}
+        image: docker.io/cilium/chaos-test-base:1.0
+        command: [ "/test/run.sh" ]
+        env:
+          - name: "SLACK_HOOK"
+            valueFrom:
+              configMapKeyRef:
+                name: monkey-config
+                key: slack-hook
+        {{- range $key, $value := .Values.env }}
+          - name: {{ $key | upper | replace "." "_" }}
+            value: {{ $value | quote }}
+        {{- end }}
+        volumeMounts:
+        - name: run-script
+          mountPath: /test
+        - name: bpf-maps
+          mountPath: /sys/fs/bpf
+        securityContext:
+          capabilities:
+            add:
+              - "NET_ADMIN"
+          privileged: true
+      volumes:
+      - name: run-script
+        configMap:
+          name: chaos-test-{{ .Values.basename }}-script
+          defaultMode: 0777
+      - name: bpf-maps
+        hostPath:
+          path: /sys/fs/bpf

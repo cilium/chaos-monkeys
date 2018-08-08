@@ -1,0 +1,5 @@
+name: chaos-daltons-egress-world
+replicas: 3
+env:
+    url: "www.google.com"
+    sleep: "1"
