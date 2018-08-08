@@ -3,7 +3,6 @@ MONKEYS := $(foreach path,$(wildcard monkeys/*),$(path:monkeys/%=%))
 all:
 	$(foreach monkey,$(MONKEYS),\
 	mkdir -p deployments/$(monkey); \
-	cp -r monkeys/$(monkey)/deployments/* deployments/$(monkey)/; \
 	kubectl create --dry-run configmap chaos-test-$(monkey)-script \
 		--from-file=monkeys/$(monkey)/run.sh --from-file=lib/helpers.bash \
 		-o yaml > deployments/$(monkey)/chaos-test-$(monkey)-script.yaml; \
