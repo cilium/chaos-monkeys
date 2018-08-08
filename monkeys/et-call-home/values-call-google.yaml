@@ -1,0 +1,6 @@
+name: "chaos-et-calls-google"
+replicas: 5
+env:
+    url: "www.google.com"
+    sleep: "1"
+    curl_options: "--connect-timeout 10 -S"

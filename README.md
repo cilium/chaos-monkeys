@@ -5,6 +5,12 @@
 Base infrastructure plus collection of tests to assist in the Cilium chaos
 testing efforts.
 
+## Requirements
+
+* helm
+* kubectl
+* GNU make
+
 ## How to deploy the test monkeys
 
 Generate all ConfigMaps for the test scripts
