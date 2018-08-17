@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: {{ .Values.basename }}
-        image: docker.io/cilium/chaos-test-base:1.0
+        image: docker.io/cilium/chaos-test-base:1.1
         imagePullPolicy: Always
         command: [ "/test/run.sh" ]
         env:
