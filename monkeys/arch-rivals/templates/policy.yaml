@@ -1,0 +1,14 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "chaos-arch-rivals-deny-ingress"
+spec:
+  endpointSelector:
+    matchLabels:
+      name: {{ .Values.name }}
+  ingress:
+  - {}
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        name: {{ .Values.name }}
