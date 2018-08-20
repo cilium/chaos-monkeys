@@ -28,7 +28,7 @@ function start_monitor() {
 		return
 	}
 
-	cilium monitor -v | ts > $MONITOR_TMP&
+	cilium monitor -v | ts '[%Y-%m-%d %H:%M:%.S]' > $MONITOR_TMP&
 	MONITOR_PID=$!
 }
 
