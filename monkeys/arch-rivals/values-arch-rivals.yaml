@@ -1,0 +1,5 @@
+name: chaos-arch-rivals
+replicas: 2
+env:
+    sleep: 1
+    curl_options: "--connect-timeout 10 -S -s"
