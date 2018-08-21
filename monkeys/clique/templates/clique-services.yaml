@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.name }}-first
+spec:
+  ports:
+  - port: 80
+  selector:
+    statefulset.kubernetes.io/pod-name: {{ .Values.name }}-0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.name }}-second
+spec:
+  ports:
+  - port: 80
+  selector:
+    statefulset.kubernetes.io/pod-name: {{ .Values.name }}-1
