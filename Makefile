@@ -14,8 +14,10 @@ all:
 		-o yaml > deployments/$(monkey)/chaos-test-$(monkey)-script.yaml; \
 	$(foreach valueFile,$(foreach path,$(wildcard monkeys/$(monkey)/values-*.yaml),$(path:monkeys/$(monkey)/%=%)),\
 	       helm template monkeys/$(monkey) --set basename=$(monkey) -f monkeys/$(monkey)/$(valueFile) > deployments/$(monkey)/$(valueFile);))
+rbac:
+	kubectl apply -f rbac.yaml
 
-deploy:
+deploy: rbac
 	$(foreach monkey,$(MONKEYS),kubectl -n chaos-testing apply -f deployments/$(monkey);)
 
 clean:
