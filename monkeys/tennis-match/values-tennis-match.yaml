@@ -1,0 +1,4 @@
+name: "tennis-match"
+replicas: 2
+env:
+  sleep: "0.2"

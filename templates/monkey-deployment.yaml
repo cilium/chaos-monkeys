@@ -15,6 +15,14 @@ spec:
         imagePullPolicy: Always
         command: [ "/test/run.sh" ]
         env:
+          - name: "POD_NAME"
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: "POD_NAMESPACE"
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
           - name: "SLACK_HOOK"
             valueFrom:
               configMapKeyRef:
