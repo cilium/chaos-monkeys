@@ -1,0 +1,4 @@
+name: "{{MONKEY_NAME}}"
+replicas: 5
+env:
+    sleep: "1"

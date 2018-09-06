@@ -1,0 +1,94 @@
+#!/bin/bash
+
+set -e
+
+ECHO=""
+BARREL=0
+POLICY=0
+
+function usage() {
+	(
+		echo "Usage: $0 [OPTION ...] <monkey-name>"
+		echo
+		echo "Create a new monkey from templates."
+		echo
+		echo "A monkey may be created as a deployment of cloned monkeys" \
+		     "(the default), or as a statefulset of two monkeys which" \
+		     "operate together (--barrel)."
+		echo
+		echo "Options:"
+		echo "  -b,--barrel	Create a barrel of monkeys (2)"
+		echo "  -p,--policy	Set up default policy for slack hook"
+	)
+}
+
+# $1: Monkey name
+function create_monkey() {
+	MONKEY="$1"
+
+	echo "Configuring monkey with name $MONKEY"
+
+	${ECHO} mkdir -p "monkeys/$MONKEY/templates"
+	${ECHO} mkdir -p "monkeys/$MONKEY/.img"
+	${ECHO} cp templates/{*.sh,Chart.yaml} "monkeys/$MONKEY/"
+	${ECHO} cp templates/README-template.md "monkeys/$MONKEY/README.md"
+	if [ "$BARREL" -ne 0 ]; then
+		echo "Configuring as a barrel (statefulset) of monkeys..."
+		${ECHO} ln -sf "../../../templates/barrel-statefulset.yaml" -t "monkeys/${MONKEY}/templates/"
+		${ECHO} cp templates/values-barrel.yaml "monkeys/$MONKEY/values-$MONKEY.yaml"
+	else
+		echo "Configuring as monkey deployment..."
+		${ECHO} ln -sf "../../../templates/monkey-deployment.yaml" -t "monkeys/${MONKEY}/templates/"
+		${ECHO} cp templates/values-monkey.yaml "monkeys/$MONKEY/values-$MONKEY.yaml"
+	fi
+
+	monkey_files=$(find "monkeys/$MONKEY/" -type f)
+	${ECHO} sed -i 's/{{MONKEY_NAME}}/'"$MONKEY"'/g' $monkey_files
+
+	if [ "$POLICY" -ne 0 ]; then
+		echo "Configuring with policy to allow access to slack hook..."
+		${ECHO} ln -sf "../../../templates/slack-hook-policy.yaml" -t "monkeys/${MONKEY}/templates/"
+	fi
+
+	echo
+	echo "To set up the new monkey:"
+	echo " * Create any custom services or policies under monkeys/$MONKEY/templates/"
+	echo " * An image for the monkey must be placed into monkeys/$MONKEY/.img/$MONKEY.jpg"
+	echo " * Custom options may be set in the \"env\" section of monkeys/$MONKEY/values-$MONKEY.yaml"
+	echo " * Any shell scripts (*.sh) under monkeys/$MONKEY will be mounted within the pod under test/"
+	echo " * The following TODOs must be addressed:"
+	echo
+	grep TODO $monkey_files
+	echo
+	echo "After addressing the above tasks, use \"make\" to create the new" \
+	     "monkey YAMLs under deployments/."
+}
+
+function main() {
+	while [ $# -gt 0 ]; do
+	opt="$1"
+	case "$opt" in
+		-p|--policy)
+			POLICY=1
+			shift;;
+		-b|--barrel)
+			BARREL=1
+			shift;;
+		-h|--help)
+			usage
+			shift;
+			exit 0;;
+		*)
+			break;;
+	esac
+	done
+
+	if [ $# -lt 1 ]; then
+		usage
+		exit 1
+	fi
+
+	create_monkey "$1"
+}
+
+main "$@"

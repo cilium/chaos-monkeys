@@ -30,3 +30,13 @@ failures:
 Deploy the test monkeys:
 
 	make deploy
+
+## How to create a new monkey
+
+A new monkey can be initialized from templates using the following command:
+
+	./create-monkey
+
+If run without arguments, it will print usage instructions for initializing
+the configuration files for your new monkey. When a monkey name is specified,
+it will set up "monkey/{{MONKEY_NAME}}" based on templated files.
