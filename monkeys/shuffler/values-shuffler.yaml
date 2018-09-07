@@ -1,0 +1,4 @@
+name: "shuffler"
+replicas: 3
+env:
+  sleep: "0.2"
