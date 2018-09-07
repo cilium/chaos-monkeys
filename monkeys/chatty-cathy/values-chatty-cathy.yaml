@@ -1,0 +1,5 @@
+name: "chatty-cathy"
+replicas: 2
+env:
+    sleep: "10"
+    interval: "0.2"
