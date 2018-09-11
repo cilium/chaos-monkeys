@@ -18,7 +18,7 @@ rbac:
 	kubectl apply -f rbac.yaml
 
 deploy: rbac
-	$(foreach monkey,$(MONKEYS),kubectl -n chaos-testing apply -f deployments/$(monkey);)
-
+	#$(foreach monkey,$(MONKEYS),kubectl -n chaos-testing apply -f deployments/$(monkey);)
+	kubectl -n chaos-testing apply -f deployments/shuffler
 clean:
 	rm -rf deployments

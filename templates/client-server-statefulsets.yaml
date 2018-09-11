@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.name }}-client
+spec:
+  replicas: {{ .Values.replicasclient }}
+  serviceName: {{ .Values.name }}-client
+  selector:
+    matchLabels:
+      name: {{ .Values.name }}-client
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.name }}-client
+    spec:
+      containers:
+      - name: {{ .Values.basename }}
+        image: docker.io/cilium/chaos-test-base:1.1
+        imagePullPolicy: Always
+        command: [ "/test/run.sh" ]
+        env:
+          - name: "POD_NAME"
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: "POD_NAMESPACE"
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: "SLACK_HOOK"
+            valueFrom:
+              configMapKeyRef:
+                name: monkey-config
+                key: slack-hook
+        {{- range $key, $value := .Values.env }}
+          - name: {{ $key | upper | replace "." "_" }}
+            value: {{ $value | quote }}
+        {{- end }}
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: run-script
+          mountPath: /test
+        - name: bpf-maps
+          mountPath: /sys/fs/bpf
+        - name: cilium-run
+          mountPath: /var/run/cilium
+        securityContext:
+          capabilities:
+            add:
+              - "NET_ADMIN"
+          privileged: true
+      volumes:
+      - name: run-script
+        configMap:
+          name: chaos-test-{{ .Values.basename }}-script
+          defaultMode: 0777
+      - name: bpf-maps
+        hostPath:
+          path: /sys/fs/bpf
+      - name: cilium-run
+        hostPath:
+          path: /var/run/cilium
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.name }}-server
+spec:
+  replicas: {{ .Values.replicasserver }}
+  serviceName: {{ .Values.name }}-server
+  selector:
+    matchLabels:
+      name: {{ .Values.name }}-server
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.name }}-server
+    spec:
+      containers:
+      - name: {{ .Values.basename }}
+        image: docker.io/cilium/chaos-test-base:1.1
+        imagePullPolicy: Always
+        command: [ "/test/run.sh" ]
+        env:
+          - name: "POD_NAME"
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: "POD_NAMESPACE"
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: "SLACK_HOOK"
+            valueFrom:
+              configMapKeyRef:
+                name: monkey-config
+                key: slack-hook
+        {{- range $key, $value := .Values.env }}
+          - name: {{ $key | upper | replace "." "_" }}
+            value: {{ $value | quote }}
+        {{- end }}
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: run-script
+          mountPath: /test
+        - name: bpf-maps
+          mountPath: /sys/fs/bpf
+        - name: cilium-run
+          mountPath: /var/run/cilium
+        securityContext:
+          capabilities:
+            add:
+              - "NET_ADMIN"
+          privileged: true
+      volumes:
+      - name: run-script
+        configMap:
+          name: chaos-test-{{ .Values.basename }}-script
+          defaultMode: 0777
+      - name: bpf-maps
+        hostPath:
+          path: /sys/fs/bpf
+      - name: cilium-run
+        hostPath:
+          path: /var/run/cilium

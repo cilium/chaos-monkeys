@@ -1,4 +1,6 @@
 name: "shuffler"
-replicas: 3
+replicasclient: 1
+replicasserver: 4
 env:
-  sleep: "0.2"
+  sleep: "1"
+
