@@ -11,6 +11,19 @@ function init_monkey() {
 	}
 }
 
+# bootstrap_kubectl configures the kubectl binary located within the pod to 
+# run against the cluster of which the pod is a member. It will have access
+# to any resource which is allowed in `rbac.yaml` at the root of this
+# repository.
+function bootstrap_kubectl() {
+  # Note that POD_NAMESPACE environment variable is injected via template files
+  # in templates/ 
+  kubectl config set-cluster ${POD_NAMESPACE} --server=https://${KUBERNETES_PORT_443_TCP_ADDR} --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+  kubectl config set-context ${POD_NAMESPACE} --cluster=${POD_NAMESPACE}
+  kubectl config set-credentials user --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+  kubectl config set-context ${POD_NAMESPACE} --user=user
+}
+
 function endpoint_debug_enable() {
 	cilium endpoint config $ENDPOINT_ID debug=true
 }
