@@ -1,0 +1,3 @@
+name: "shuffler"
+env:
+  sleep: "1"
