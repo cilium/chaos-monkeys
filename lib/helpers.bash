@@ -142,6 +142,12 @@ function test_fail() {
 	}
 }
 
+function log_line() {
+  local MSG=$(/bin/date --rfc-3339=seconds)
+  MSG="${MSG}  $*"
+  echo "${MSG}"
+}
+
 function cleanup() {
 	stop_tcpdump
 	cleanup_tcpdump
