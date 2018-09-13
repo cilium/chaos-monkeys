@@ -11,6 +11,9 @@ all:
 		$(foreach script,$(wildcard monkeys/$(monkey)/*.jq),\
 			"--from-file=$(script)"\
 		) \
+		$(foreach script,$(wildcard monkeys/$(monkey)/kubernetes-resources/*yaml),\
+			"--from-file=$(script)"\
+		) \
 		-o yaml > deployments/$(monkey)/chaos-test-$(monkey)-script.yaml; \
 	$(foreach valueFile,$(foreach path,$(wildcard monkeys/$(monkey)/values-*.yaml),$(path:monkeys/$(monkey)/%=%)),\
 	       helm template monkeys/$(monkey) --set basename=$(monkey) -f monkeys/$(monkey)/$(valueFile) > deployments/$(monkey)/$(valueFile);))
