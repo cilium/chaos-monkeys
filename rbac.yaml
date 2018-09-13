@@ -27,10 +27,11 @@ metadata:
   #namespace: chaos-testing 
 rules:
   - apiGroups:
-      - ""
+    - ""
     resources:
       - endpoints
       - services
+      - pods
     verbs:
       - get
       - list
@@ -39,5 +40,16 @@ rules:
       - create
       - patch
       - delete
-
-
+  - apiGroups:
+    - "apps"
+    resources: 
+      - statefulsets/scale
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - watch
+      - update
+      - create
+      - patch
+      - delete    
