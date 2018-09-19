@@ -12,6 +12,9 @@ all:
 		$(foreach script,$(wildcard monkeys/$(monkey)/*.sh),\
 			"--from-file=$(script)"\
 		) \
+		$(foreach script,$(wildcard monkeys/$(monkey)/*.txt),\
+			"--from-file=$(script)"\
+		) \
 		$(foreach script,$(wildcard monkeys/$(monkey)/*.jq),\
 			"--from-file=$(script)"\
 		) \
