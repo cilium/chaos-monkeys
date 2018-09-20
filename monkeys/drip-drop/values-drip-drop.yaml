@@ -1,0 +1,6 @@
+name: "drip-drop"
+replicas: 3
+env:
+    sleep: "0.001"
+    period: "10"
+    bytes: "10"
