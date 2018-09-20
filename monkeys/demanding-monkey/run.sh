@@ -26,6 +26,7 @@ fi
 
 API_TOKEN_PATH=${API_TOKEN_PATH:-/var/run/secrets/kubernetes.io/serviceaccount/token}
 KUBE_TOKEN=$(< ${API_TOKEN_PATH})
+KUBERNETES_PORT_443_TCP_ADDR=${KUBERNETES_PORT_443_TCP_ADDR:-kubernetes}
 
 # Running namespace
 NAMESPACE_NAME=${NAMESPACE_NAME:-default}
@@ -40,7 +41,7 @@ function latency_test() {
     start_tcpdump
     log_line "trying to get endpoints from Kubernetes"
     log_line "=========================================================="
-    CURLOUT=$(curl -s -k -H "Authorization: Bearer $KUBE_TOKEN" -D /dev/stderr --fail --connect-timeout $CONNECTTIMEOUT --max-time $MAXTIMEOUT "https://kubernetes.default.svc.cluster.local/api/v1/namespaces/chaos-testing/endpoints" -w "@/test/curl-format.txt")
+    CURLOUT=$(curl -s -k -H "Authorization: Bearer $KUBE_TOKEN" -D /dev/stderr --fail --connect-timeout $CONNECTTIMEOUT --max-time $MAXTIMEOUT https://${KUBERNETES_PORT_443_TCP_ADDR}/api/v1/namespaces/chaos-testing/endpoints -w "@/test/curl-format.txt")
     CMDRES=$?
     log_line "=========================================================="
     if [[ "$CMDRES" != "0" ]]; then
