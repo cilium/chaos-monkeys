@@ -2,7 +2,7 @@
 
 set -o pipefail
 
-ERROR_MSG="oh noez! tennis match failed"
+ERROR_MSG="oh noez! $HOSTNAME failed"
 
 . $(dirname ${BASH_SOURCE})/helpers.bash
 

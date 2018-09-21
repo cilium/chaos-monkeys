@@ -26,7 +26,7 @@ do
 	stop_tcpdump
 
 	[ "$CODE" -ne "0" ] && {
-		notify_slack ":fire: *$ERROR_MSG* (exit code $CODE) :face_palm:"
+		notify_slack ":fire: *$ERROR_MSG* (pod $HOSTNAME, exit code $CODE) :face_palm:"
 		test_fail
 		exit 1
 	}

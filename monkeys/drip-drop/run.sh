@@ -28,7 +28,7 @@ do
 	stop_tcpdump
 
 	[ "$CODE" -ne "0" ] && {
-		notify_slack ":wrench: :droplet: *$ERROR_MSG* (exit code $CODE)"
+		notify_slack ":wrench: :droplet: *$ERROR_MSG* (pod $HOSTNAME, exit code $CODE)"
 		test_fail
 		exit 1
 	}

@@ -45,7 +45,7 @@ function latency_test() {
     CMDRES=$?
     log_line "=========================================================="
     if [[ "$CMDRES" != "0" ]]; then
-      notify_slack "*$ERROR_MSG* unable to access kubernetes service: \`\`\`$CURLOUT\`\`\` (exit code $CODE) :cry:"
+      notify_slack "*$ERROR_MSG* unable to access kubernetes service: \`\`\`$CURLOUT\`\`\` (pod $HOSTNAME, exit code $CODE) :cry:"
       test_fail
       exit 1
     fi
@@ -55,7 +55,7 @@ function latency_test() {
     CMDRES=$?
     log_line "=========================================================="
     if [[ "$CMDRES" != "0" ]]; then
-      notify_slack "*$ERROR_MSG* unable to connect to http://google.com: \`\`\`$CURLOUT\`\`\` (exit code $CODE) :cry:"
+      notify_slack "*$ERROR_MSG* unable to connect to http://google.com: \`\`\`$CURLOUT\`\`\` (pod $HOSTNAME, exit code $CODE) :cry:"
       test_fail
       exit 1
     fi
