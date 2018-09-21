@@ -2,7 +2,7 @@
 
 set -o pipefail
 
-ERROR_MSG="oh noez! shuffler monkey failed"
+ERROR_MSG="oh noez! $HOSTNAME failed"
 
 . $(dirname ${BASH_SOURCE})/helpers.bash
 
