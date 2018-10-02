@@ -1,4 +1,4 @@
-# Chaos Test: Tennis Match
+# Chaos Test: Shuffler
 
 ![](https://github.com/cilium/chaos-monkeys/raw/master/monkeys/shuffler/.img/shuffler.jpg)
 
