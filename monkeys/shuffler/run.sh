@@ -2,7 +2,6 @@
 
 set -o pipefail
 
-ERROR_MSG="oh noez! $HOSTNAME failed"
 
 . $(dirname ${BASH_SOURCE})/helpers.bash
 
@@ -18,9 +17,7 @@ KUBERNETES_PORT_443_TCP_ADDR=${KUBERNETES_PORT_443_TCP_ADDR:-kubernetes}
 
 endpoint_debug_enable
 
-# TODO - would be good to factor this out into helpers.bash or something since
-# it is used elsewhere.
-ERROR_MSG="No-one is listening to chatty-cathy!"
+ERROR_MSG="oh noez! $HOSTNAME (pod: $POD_NAME) failed"
 
 phrases[0]="Just gotta hash it and cache it"
 phrases[1]="Less talking man, more eating"
