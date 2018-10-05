@@ -1,0 +1,12 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+description: "dup CIDR policy 2"
+metadata:
+  name: "duppoltwo"
+spec:
+  endpointSelector:
+    matchLabels:
+      name: apple-tree-client
+  egress:
+  - toCIDR:
+    - 1.1.1.1/32

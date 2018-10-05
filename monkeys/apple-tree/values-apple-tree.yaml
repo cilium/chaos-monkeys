@@ -1,0 +1,5 @@
+name: "apple-tree-controller"
+env:
+  maxtimeout: "10"
+  connecttimeout: "3"
+  sleep: "10"
