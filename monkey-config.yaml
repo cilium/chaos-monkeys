@@ -5,4 +5,4 @@ metadata:
 data:
   # 1. Create a Slack webhook: https://api.slack.com/incoming-webhooks
   # 2. Fill in the URL including the token
-  slack-hook: "https://hooks.slack.com/services/XXXXXXX"
+  #slack-hook: "https://hooks.slack.com/services/XXXXXXX"

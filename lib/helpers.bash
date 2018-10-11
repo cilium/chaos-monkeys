@@ -6,8 +6,7 @@ export ENDPOINT_ID=$(cilium endpoint list | grep $ENDPOINT_IP | cut -d' ' -f 1)
 
 function init_monkey() {
 	[ -z "$SLACK_HOOK" ] && {
-		echo "SLACK_HOOK not provided"
-		exit 1
+		echo "Warning: SLACK_HOOK not provided"
 	}
 }
 
