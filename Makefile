@@ -31,5 +31,8 @@ rbac:
 deploy: rbac
 	$(foreach monkey,$(MONKEYS),kubectl -n chaos-testing apply -f deployments/$(monkey);)
 
+undeploy:
+	$(foreach monkey,$(MONKEYS),kubectl -n chaos-testing delete -f deployments/$(monkey);)
+
 clean:
 	rm -rf deployments
