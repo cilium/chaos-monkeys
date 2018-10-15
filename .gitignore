@@ -1,2 +1,2 @@
 deployments
-monkeys/*/kubernetes-resources
+monkeys/shuffler/kubernetes-resources
