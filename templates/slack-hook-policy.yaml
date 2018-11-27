@@ -15,5 +15,8 @@ spec:
     - ports:
       - port: '53'
         protocol: UDP
+      rules:
+        dns:
+        - matchName: "hooks.slack.com"
   - toFQDNs:
     - matchName: "hooks.slack.com"
