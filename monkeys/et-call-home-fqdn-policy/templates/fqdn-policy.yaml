@@ -15,5 +15,9 @@ spec:
     - ports:
       - port: '53'
         protocol: UDP
+      rules:
+        dns:
+          - matchPattern: "*.*"
+          - matchPattern: "*.*.*"
   - toFQDNs:
       - matchName: {{ .Values.fqdn }}
