@@ -20,9 +20,11 @@ do
 	start_monitor
 	start_tcpdump
 
-	echo -n "Trying to call home ($URL): "
+	echo -n "Trying to call 1.1.1.1: "
+	time curl -vvv -I  -w "dns: %{time_namelookup} connect: %{time_connect} total: %{time_total}\n" -4 -s $CURL_OPTIONS -o /dev/null 1.1.1.1 
 
-	time curl -4 -s $CURL_OPTIONS $URL > /dev/null
+	echo -n "Trying to call home ($URL): "
+	time curl -vvv -I -w "dns: %{time_namelookup} connect: %{time_connect} total: %{time_total}\n" -4 -s $CURL_OPTIONS -o /dev/null $URL
 	CODE=$?
 	echo "$CODE"
 
