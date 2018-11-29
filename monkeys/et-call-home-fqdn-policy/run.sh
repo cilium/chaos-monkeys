@@ -22,7 +22,7 @@ do
 
 	echo -n "Trying to call home ($URL): "
 
-	time curl -4 -s $CURL_OPTIONS 10 $URL > /dev/null
+	time curl -4 -s $CURL_OPTIONS $URL > /dev/null
 	CODE=$?
 	echo "$CODE"
 
