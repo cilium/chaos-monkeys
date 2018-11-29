@@ -14,10 +14,11 @@ spec:
     toPorts:
     - ports:
       - port: '53'
-        protocol: UDP
+        protocol: ANY
       rules:
         dns:
-          - matchPattern: "*.*"
-          - matchPattern: "*.*.*"
+          - matchName: {{ .Values.fqdn }}
   - toFQDNs:
       - matchName: {{ .Values.fqdn }}
+  - toCIDR:
+    - "1.1.1.1/32"
