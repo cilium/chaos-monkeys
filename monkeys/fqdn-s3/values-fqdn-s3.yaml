@@ -1,0 +1,7 @@
+name: "fqdn-s3"
+replicas: 3
+fqdn: "s3.amazonaws.com"
+env:
+    sleep: "5"
+    connectTimeout: "5"
+    targetURL: "https://s3.amazonaws.com/releases.cilium.io/tools/cluster-diagnosis.zip"
