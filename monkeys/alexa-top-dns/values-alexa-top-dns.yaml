@@ -1,0 +1,4 @@
+name: "alexa-top-dns"
+replicas: 1
+env:
+    sleep: "1"

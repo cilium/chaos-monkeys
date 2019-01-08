@@ -1,0 +1,17 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: chaos-test-{{ .Values.basename }}
+spec:
+  endpointSelector:
+    matchLabels:
+      name: {{ .Values.name }}
+  egress:
+  - toPorts:
+      - ports:
+         - port: "53"
+           protocol: ANY
+        rules:
+          dns:
+            - matchPattern: "*.*"
+            - matchPattern: "*.*.*"
