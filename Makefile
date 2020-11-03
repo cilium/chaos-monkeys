@@ -5,9 +5,10 @@ all:
 	$(foreach monkey,$(MONKEYS),\
 	mkdir -p deployments/$(monkey); \
 	mkdir -p monkeys/$(monkey)/kubernetes-resources; \
-	$(foreach file,$(foreach kubeDep, $(wildcard monkeys/$(monkey)/kubernetes-resources-charts/templates/*yaml),$(notdir $(kubeDep)) ),\
-		 helm template monkeys/$(monkey)/kubernetes-resources-charts -x templates/$(file) --set basename=$(monkey) -f monkeys/$(monkey)/kubernetes-resources-charts/values-$(monkey).yaml > monkeys/$(monkey)/kubernetes-resources/$(file) ; ) \
-	kubectl create --dry-run configmap chaos-test-$(monkey)-script \
+	if [ -d monkeys/$(monkey)/kubernetes-resources-charts ]; then \
+		 helm template monkeys/$(monkey)/kubernetes-resources-charts --set basename=$(monkey) -f monkeys/$(monkey)/kubernetes-resources-charts/values-$(monkey).yaml > monkeys/$(monkey)/kubernetes-resources/$(monkey)-extra.yaml; \
+	fi; \
+	kubectl create --dry-run=client configmap chaos-test-$(monkey)-script \
 		--from-file=lib/helpers.bash \
 		$(foreach script,$(wildcard monkeys/$(monkey)/*.sh),\
 			"--from-file=$(script)"\
