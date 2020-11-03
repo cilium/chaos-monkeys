@@ -34,6 +34,7 @@ deploy: rbac
 
 undeploy:
 	$(foreach monkey,$(MONKEYS),kubectl -n chaos-testing delete -f deployments/$(monkey);)
+	kubectl delete svc --all -n chaos-testing
 
 clean:
 	rm -rf deployments
